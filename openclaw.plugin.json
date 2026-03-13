@@ -1,33 +1,5 @@
 {
   "id": "civic-google",
   "name": "Civic Google Credentials Extension",
-  "description": "Injects fresh OAuth tokens from Civic AuthZ into tool calls via beforeToolCall hooks.",
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "credentialMappings": {
-        "type": "array",
-        "description": "Maps credential IDs to env vars and tool matchers",
-        "items": {
-          "type": "object",
-          "required": ["credentialId", "envVar", "toolMatch"],
-          "properties": {
-            "credentialId": {
-              "type": "string",
-              "description": "Credential ID on the proxy (e.g. 'google-gmail-read')"
-            },
-            "envVar": {
-              "type": "string",
-              "description": "Environment variable to set (e.g. 'GOG_ACCESS_TOKEN')"
-            },
-            "toolMatch": {
-              "type": "string",
-              "description": "Tool matcher in format 'toolName:commandPrefix' (e.g. 'exec:gog gmail')"
-            }
-          }
-        }
-      }
-    }
-  }
+  "description": "Injects fresh OAuth tokens from Civic AuthZ into tool calls via beforeToolCall hooks."
 }
