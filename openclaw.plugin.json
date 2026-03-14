@@ -1,5 +1,10 @@
 {
   "id": "civic-google",
   "name": "Civic Google Credentials Extension",
-  "description": "Injects fresh OAuth tokens from Civic AuthZ into tool calls via beforeToolCall hooks."
+  "description": "Injects fresh OAuth tokens from Civic AuthZ into tool calls via beforeToolCall hooks.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
 }
