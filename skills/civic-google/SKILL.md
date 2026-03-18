@@ -1,14 +1,17 @@
 ---
 name: civic-google
-description: Set up Google Workspace access (Gmail, Calendar, Drive, etc.) via the Civic OAuth plugin
+description: Use gog (Google CLI) without manual OAuth setup — Civic handles token management automatically
 metadata: {"openclaw": {"requires": {"bins": ["gog"], "env": ["CIVIC_TOKEN"]}, "emoji": "🔑"}}
 ---
 
-## What this does
+This skill describes the `@civic/openclaw-google` plugin, which lets agents use `gog` (the Google Workspace CLI) without the user having to create a Google Cloud project, configure OAuth credentials, or manage tokens. Civic acts as an OAuth proxy — it provides the OAuth client, stores tokens encrypted server-side, refreshes them automatically, and the plugin requests only the scope each command actually needs.
 
-This plugin intercepts `gog` CLI commands and automatically injects a short-lived OAuth access token from Civic. No Google Cloud project, no local credentials, no token management. Each subcommand gets only the minimum OAuth scope it needs.
+## Privacy and security
 
-On first use for a given scope, the user is shown an authorization URL to consent. After that, tokens are refreshed automatically server-side.
+- **What is sent to Civic:** The plugin sends the `gog` command prefix (e.g. `gog gmail send`) over HTTPS to `app.civic.com` for scope resolution. The proxy reads only the command prefix to determine which OAuth scope is needed — command arguments (email addresses, search queries, file names) are not logged, stored, or used by the proxy.
+- **CIVIC_TOKEN:** This is the user's own API key from their Civic account at app.civic.com. It authenticates the user to their own account and is never shared. It is sent as a Bearer token over HTTPS.
+- **Token handling:** OAuth access tokens are short-lived (~1 hour), stored encrypted (AES-256) on Civic's servers, and refreshed automatically. The agent never sees OAuth client secrets or refresh tokens.
+- **Source code:** The plugin is open source at https://github.com/civicteam/openclaw-google and published on npm as `@civic/openclaw-google`.
 
 ## Setup
 
@@ -30,9 +33,19 @@ On first use for a given scope, the user is shown an authorization URL to consen
 
 4. Restart the gateway.
 
-## Supported services and commands
+## How it works
 
-The plugin maps each `gog` subcommand to the narrowest OAuth scope required. Write operations use specific scopes; unrecognized subcommands fall back to read-only.
+1. Agent calls `gog gmail search newer_than:1d`
+2. Plugin intercepts the `exec` tool call via a `before_tool_call` hook
+3. Plugin sends the command prefix to the Civic proxy for scope resolution
+4. Proxy matches `gog gmail` -> `gmail.readonly` scope
+5. If authorized: returns a short-lived access token, plugin sets `GOG_ACCESS_TOKEN` env var, `gog` runs
+6. If not yet authorized: blocks the tool call and surfaces an auth URL for the user to consent
+7. After first consent per scope, all future calls work automatically
+
+## Supported services and scope mapping
+
+The plugin maps each `gog` subcommand to the narrowest OAuth scope required. Write operations get specific scopes; unrecognized subcommands fall back to read-only.
 
 ### Gmail
 - `gog gmail send` — gmail.send
@@ -87,16 +100,6 @@ The plugin maps each `gog` subcommand to the narrowest OAuth scope required. Wri
 - `gog appscript run` — script.projects
 - `gog appscript deploy` — script.deployments
 - `gog appscript` (catch-all) — script.projects.readonly + drive.readonly
-
-## How it works
-
-1. Agent calls `gog gmail search newer_than:1d`
-2. Plugin intercepts the `exec` tool call via `before_tool_call` hook
-3. Sends `POST /token` to the Civic proxy with the raw command
-4. Proxy matches `gog gmail` catch-all, resolves to `gmail.readonly` scope
-5. If authorized: returns a short-lived access token, plugin sets `GOG_ACCESS_TOKEN` env var
-6. If not yet authorized: blocks the tool call and surfaces an auth URL for the user
-7. `gog` runs with the injected token
 
 ## Troubleshooting
 
