@@ -1,6 +1,6 @@
 {
   "name": "@civic/openclaw-google",
-  "version": "0.2.0",
+  "version": "2026.3.18",
   "description": "Google API tools powered by Civic AuthZ OAuth tokens",
   "type": "module",
   "repository": {
