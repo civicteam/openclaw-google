@@ -1,6 +1,6 @@
 # @civic/openclaw-google
 
-An [OpenClaw](https://openclaw.ai) plugin that gives AI agents access to Google Workspace (Gmail, Calendar, etc.) using [Civic](https://nexus.civic.com) for OAuth. No Google Cloud project, no local credentials, no token management.
+An [OpenClaw](https://openclaw.ai) plugin that gives AI agents access to Google Workspace (Gmail, Calendar, etc.) using [Civic](https://app.civic.com) for OAuth. No Google Cloud project, no local credentials, no token management.
 
 ## What this replaces
 
@@ -77,10 +77,10 @@ brew install gog
 Add to the OpenClaw gateway environment:
 
 ```bash
-NEXUS_TOKEN=<your-civic-api-token>
+CIVIC_TOKEN=<your-civic-api-token>
 ```
 
-Get your token from [nexus.civic.com](https://nexus.civic.com) → Settings → API Keys.
+Get your token from [app.civic.com](https://app.civic.com) → Settings → API Keys.
 
 ### 4. Use it
 
@@ -142,7 +142,7 @@ To add mappings for additional Google services (e.g., Drive):
 
 ### Custom proxy URL
 
-Default: `https://nexus.civic.com/ext/openclaw`. For local development:
+Default: `https://app.civic.com/ext/openclaw`. For local development:
 
 ```bash
 OPENCLAW_PROXY_URL=http://localhost:3013/openclaw

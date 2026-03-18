@@ -1,6 +1,6 @@
 import type { OpenClawPluginApi } from "openclaw/plugin-sdk/civic-google";
 
-const DEFAULT_PROXY_URL = "https://nexus.civic.com/ext/openclaw";
+const DEFAULT_PROXY_URL = "https://app.civic.com/ext/openclaw";
 
 type PluginConfig = {
   proxyUrl?: string;
@@ -31,7 +31,7 @@ export default function register(api: OpenClawPluginApi) {
     if (!bearerToken) {
       return {
         block: true,
-        blockReason: "No CIVIC_TOKEN or NEXUS_TOKEN configured — cannot authenticate to Civic proxy.",
+        blockReason: "No CIVIC_TOKEN configured — set it in the gateway environment. Get your token from app.civic.com → Settings → API Keys.",
       };
     }
 
@@ -92,7 +92,7 @@ export default function register(api: OpenClawPluginApi) {
 
       return {
         block: true,
-        blockReason: "Google credential is pending authorization. Please complete the OAuth flow via Civic Nexus, then try again.",
+        blockReason: "Google credential is pending authorization. Please complete the OAuth flow via Civic, then try again.",
       };
     } catch (err) {
       return {
