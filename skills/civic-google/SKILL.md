@@ -22,5 +22,3 @@ metadata: {"openclaw": {"requires": {"bins": ["gog"], "env": ["CIVIC_TOKEN"]}, "
    ```
 
 4. Restart the gateway.
-
-For full documentation, read `{baseDir}/../../README.md`.
